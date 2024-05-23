@@ -1,4 +1,9 @@
-// import { Router} from "express";
-// import userController from "../controllers/userController";
-// import { upload } from "../services/multer";
-// const userRouter = Router()
+import express from "express";
+import usercontroller from '../controller/userController'
+const userRouter = express.Router();
+
+
+
+
+// userRouter.post('/',usercontroller.signupPost)
+export default userRouter;

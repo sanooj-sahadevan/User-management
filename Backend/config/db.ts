@@ -1,10 +1,38 @@
-import mysql from 'mysql2/promise';
+// import { Client } from 'pg';
 
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'myuser',
-  password: 'Babygirl@123',
-  database: 'usermanagement',
+// const client = new Client({
+//     host: 'localhost',
+//     port: 5432,
+//     database: 'usermanagement',
+//     user: 'postgres',
+//     password: 'Babygirl@123'
+// });
+
+// async function connectToDatabase() {
+//     try {
+//         await client.connect();
+//         console.log('Connected to the database');
+//     } catch (err) {
+//         console.error('Connection error:');
+//     }
+// }
+
+// connectToDatabase();
+
+// export default client;
+
+
+import { Client } from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export const client = new Client({
+    host: 'localhost',
+    port: 5432,
+    database: 'usermanagement',
+    user: 'postgres',
+    password: 'Babygirl@123'
 });
 
-export default pool;
+export default async () => await client.connect();

@@ -1,34 +1,39 @@
-import React from 'react'
+import { Link } from 'react-router-dom';
 
-const Login = () => {
+const Signup = () => {
   return (
-    <div>
-       <div className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-    <h1 className="text-3xl text-center font-semibold mb-6">Sign Up</h1>
-    <form className="flex flex-col gap-4">
-        
-        <input
+    <div className="flex justify-center items-center h-screen bg-pink-600">
+      <div className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow-md-black-500">
+        <h1 className="text-3xl text-center font-semibold mb-6">Log in</h1>
+        <form className="flex flex-col gap-4">
+          <input
             type="email"
             placeholder="Email"
             id="email"
-            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
+            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:black-500"
+          />
+          <input
             type="password"
             placeholder="Password"
             id="password"
-            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
+            className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:black-500"
+          />
+          <button
             type="submit"
-            className="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-            Sign Up
-        </button>
-    </form>
-</div>
+            className="bg-black text-white p-3 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Log in
+          </button>
+        </form>
+        <div className='flex gap-2 mt-3'>
+          <p>Have an account?</p>
+          <Link to='/signup'>
+            <span className='text-blue-500'>Sign in</span>
+          </Link>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Signup;
