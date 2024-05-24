@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+
 
 const SignUp = () => {
     const [formData, setFormData] = useState({});
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate()
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -13,7 +17,9 @@ const SignUp = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await fetch('http://localhost:3000/signup', {
+            setError(false);
+
+            const res = await fetch('http://localhost:3000/user/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,7 +29,14 @@ const SignUp = () => {
             const data = await res.json();
             console.log(data);
             setLoading(false);
-            setError(false);
+
+            if (data.success === false) {
+                setError(false);
+                return
+            }
+
+            navigate('/home')
+
         } catch (error) {
             setLoading(false);
             setError(true);
