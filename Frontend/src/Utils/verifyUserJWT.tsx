@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
+import { loginUser, logoutUser } from "../Redux/User/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 
 export function verifyUserJWT() {
   const [userLogged, setUserLogged] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const userJWT = localStorage.getItem("userJWT");
 
-    if (!userJWT) {
-      setUserLogged(false);
-      return;
-    }
+    // if (!userJWT) {
+    //   dispatch(logoutUser());
+    //   return;
+    // }
 
     async function verifyUser() {
       try {

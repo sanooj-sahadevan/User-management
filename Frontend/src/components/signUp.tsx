@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInFailure, signInStart, signInSuccess } from "../Redux/User/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import { signInFailure, signInStart, signInSuccess } from '../Redux/User/userSlice'; // Ensure the correct import path
 
 const SignUp = () => {
     const [formData, setFormData] = useState({});
-    const { loading, error } = useSelector((state) => state.user);
-    console.log(loading, error);
+    const { loading, error } = useSelector((stat) => stat.user);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -27,8 +26,9 @@ const SignUp = () => {
                 },
                 body: JSON.stringify(formData),
             });
+
             const data = await res.json();
-            console.log(data);
+            console.log(data); // Added console log for response data
 
             if (!data.success) {
                 dispatch(signInFailure('Signup failed'));
@@ -42,7 +42,7 @@ const SignUp = () => {
             }, 3000);
 
         } catch (error) {
-            dispatch(signInFailure(error.toString()));
+            dispatch(signInFailure(toString()));
         }
     };
 
@@ -83,7 +83,7 @@ const SignUp = () => {
                         type="submit"
                         className="bg-black text-white p-3 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
                     >
-                        {loading ? 'Loading....' : "Sign up"}
+                        {loading ? 'Loading....' : 'Sign up'}
                     </button>
                 </form>
                 {error && <p className="text-red-600 mt-4">{error}</p>}

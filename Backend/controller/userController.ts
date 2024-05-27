@@ -65,7 +65,7 @@ const loginPost = async (req: Request, res: Response, next: NextFunction) => {
       return next(errorHandler(401, 'Wrong password'));
     }
 
-    // Creating a JWT token and sending it in the body and as a cookie
+    // Creating a JWT token and sending it in the body
     const userJWT = JWT.sign({ email }, String(process.env.JWT_KEY), {
       expiresIn: "1h",
     });
@@ -77,16 +77,7 @@ const loginPost = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// const logoutGet = (req: Request, res: Response) => {
-//   console.log('Logout request received');
-//   res.status(200).json({ success: true, message: 'Logout successful' });
-//   console.log('Logout successful');
-// };
-
-
-
-
-const verifyUser = async (req: any, res: any) => {
+const verifyUser = async (req: Request, res: Response) => {
   try {
     const { userJWT } = req.body;
     const verifyJWT = JWT.verify(
@@ -94,21 +85,55 @@ const verifyUser = async (req: any, res: any) => {
       String(process.env.JWT_KEY)
     ) as DecodedJWT;
 
-    return res
-      .status(200)
-      .send({ success: true, message: "User JWT verified successfully" });
+    return res.status(200).send({ success: true, message: "User JWT verified successfully" });
   } catch (error: any) {
     if (error?.message === "invalid signature") {
-      res
-        .status(401)
-        .send({ success: false, message: "User JWT failed to veify" });
+      res.status(401).send({ success: false, message: "User JWT failed to verify" });
+    } else {
+      res.status(500).send({ success: false, message: "Internal server error" });
     }
   }
-}
+};
 
+const fetchUserData = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log('Fetching user data');
 
+    const { userJWT } = req.body;
+    const { email } = JWT.verify(userJWT, String(process.env.JWT_KEY)) as DecodedJWT;
 
+    const query = `SELECT username, email, phone, image FROM users WHERE email=$1`;
+    const result = await client.query(query, [email]);
+    const userData = result.rows[0];
 
+    if (!userData) {
+      return next(errorHandler(404, 'User data not found'));
+    }
 
+    res.status(200).send({ success: true, userData });
+  } catch (error: any) {
+    console.error('Error fetching user data:', error);
+    return next(errorHandler(500, 'Internal server error'));
+  }
+};
 
-export default { signupPost, loginPost,verifyUser };
+const uploadImage = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log('Uploading image');
+    
+    console.log(req.file?.filename);
+
+    const { userJWT } = req.body;
+    const { email } = JWT.verify(userJWT, String(process.env.JWT_KEY)) as DecodedJWT;
+
+    const query = `UPDATE users SET image = $1 WHERE email = $2`;
+    await client.query(query, [req.file?.filename, email]);
+
+    res.status(200).send({ success: true });
+  } catch (error: any) {
+    console.error('Error uploading image:', error);
+    return next(errorHandler(500, 'Internal server error'));
+  }
+};
+
+export default { signupPost, loginPost, verifyUser, fetchUserData, uploadImage };
