@@ -23,10 +23,8 @@ export function verifyAdminJWT() {
           },
           body: JSON.stringify({ adminJWT }),
         });
-
         const result = await response.json();
-
-        if (response.ok && result.success) {
+        if (result.success) {
           dispatch(loginAdmin());
         } else {
           dispatch(logoutAdmin());
@@ -35,7 +33,7 @@ export function verifyAdminJWT() {
         dispatch(logoutAdmin());
       }
     }
-
+    
     verifyAdmin();
   }, [dispatch, adminJWT]);
 

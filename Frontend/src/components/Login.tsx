@@ -36,7 +36,7 @@ const Login = () => {
       localStorage.setItem("userJWT", data.userJWT);
       setTimeout(() => {
         navigate('/home');
-      }, 3000);
+      }, 1000);
 
 
 

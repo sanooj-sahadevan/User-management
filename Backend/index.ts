@@ -7,6 +7,8 @@ import bcrypt from "bcryptjs";
 import JWT from 'jsonwebtoken';
 import { errorHandler } from './utils/error';
 import userRouter from "./routes/userRoutes";
+import adminRouter from "./routes/adminRoutes";
+
 
 dotenv.config();
 
@@ -25,6 +27,7 @@ app.use(express.static("public"));
 
 // Use user routes
 app.use("/user", userRouter);
+app.use('/admin',adminRouter)
 
 
 

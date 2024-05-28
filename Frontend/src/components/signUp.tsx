@@ -1,21 +1,24 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../Redux/User/userSlice'; // Ensure the correct import path
 
 const SignUp = () => {
-    const [formData, setFormData] = useState({});
-    const { loading, error } = useSelector((stat) => stat.user);
+
+    type Inputs = {
+        username: string;
+        email: string;
+        phone: string;
+        password: string;
+    };
+
+    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const { loading, error } = useSelector((state: any) => state.user);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
         try {
             dispatch(signInStart());
 
@@ -24,25 +27,25 @@ const SignUp = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(data),
             });
 
-            const data = await res.json();
-            console.log(data); // Added console log for response data
+            const responseData = await res.json();
+            console.log(responseData); // Added console log for response data
 
-            if (!data.success) {
+           
+
+            dispatch(signInSuccess(responseData));
+            localStorage.setItem("userJWT", responseData.userJWT);
+            navigate('/home');
+
+            if (!responseData.success) {
                 dispatch(signInFailure('Signup failed'));
                 return;
             }
 
-            dispatch(signInSuccess(data));
-            localStorage.setItem("userJWT", data.userJWT);
-            setTimeout(() => {
-                navigate('/home');
-            }, 3000);
-
         } catch (error) {
-            dispatch(signInFailure(toString()));
+            dispatch(signInFailure('An error occurred during signup.'));
         }
     };
 
@@ -50,35 +53,73 @@ const SignUp = () => {
         <div className="flex justify-center items-center h-screen bg-pink-600">
             <div className="p-6 max-w-lg bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl text-center font-semibold mb-6">Sign Up</h1>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                     <input
                         type="text"
                         placeholder="Username"
-                        id="username"
+                        {...register("username", {
+                            required: "Username is required",
+                            pattern: {
+                              value: /^[A-Za-z]+$/i,
+                              message:
+                                "Please valid characters only. [Alphabets A to Z, a to z ]",
+                            },
+                            minLength: { value: 5, message: "Enter atleast 5 characters" },
+                          })}
                         className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-500"
-                        onChange={handleChange}
                     />
+                    {errors.username && <p className="text-red-600">{errors.username.message}</p>}
+
                     <input
                         type="email"
                         placeholder="Email"
-                        id="email"
+                        {...register("email", {
+                            required: "Email is required",
+                            pattern: {
+                              value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                              message: "Please enter a valid email id",
+                            },
+                            minLength: {
+                              value: 11,
+                              message: "Enter atleast 11 characters",
+                            },
+                          })}
                         className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-500"
-                        onChange={handleChange}
                     />
+                    {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+
                     <input
                         type="number"
                         placeholder="Phone number"
-                        id="phone"
+                        {...register("phone", {
+                            required: "Phone number is required",
+                            pattern: {
+                              value: /^\d{10}$/,
+                              message: "Please enter a valid phone number",
+                            },
+                            minLength: { value: 10, message: "Enter 10 numbers" },
+                            maxLength: { value: 10, message: "Enter 10 numbers" },
+                          })}
+                          minLength={10}
+                          maxLength={10}
                         className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-500"
-                        onChange={handleChange}
                     />
+                    {errors.phone && <p className="text-red-600">{errors.phone.message}</p>}
+
                     <input
                         type="password"
                         placeholder="Password"
-                        id="password"
+                        {...register("password", {
+                            required: "Enter a password",
+                            pattern: {
+                                value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
+                                message: "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character",
+                            },
+                        })}
                         className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-500"
-                        onChange={handleChange}
                     />
+                    {errors.password && <p className="text-red-600">{errors.password.message}</p>}
+
                     <button
                         type="submit"
                         className="bg-black text-white p-3 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
