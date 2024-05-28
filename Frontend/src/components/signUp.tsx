@@ -2,9 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../Redux/User/userSlice'; // Ensure the correct import path
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
-
     type Inputs = {
         username: string;
         email: string;
@@ -33,19 +34,53 @@ const SignUp = () => {
             const responseData = await res.json();
             console.log(responseData); // Added console log for response data
 
-           
-
-            dispatch(signInSuccess(responseData));
-            localStorage.setItem("userJWT", responseData.userJWT);
-            navigate('/home');
-
             if (!responseData.success) {
                 dispatch(signInFailure('Signup failed'));
+                toast.error("Signup failed", {
+                    position: "top-center",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 return;
             }
 
+            dispatch(signInSuccess(responseData));
+            localStorage.setItem("userJWT", responseData.userJWT);
+            toast.success("Signed up successfully", {
+                position: "top-center",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+
+            setTimeout(() => {
+                navigate('/home');
+            }, 1000);
+
         } catch (error) {
             dispatch(signInFailure('An error occurred during signup.'));
+            toast.error("An error occurred during signup", {
+                position: "top-center",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
         }
     };
 
@@ -60,12 +95,11 @@ const SignUp = () => {
                         {...register("username", {
                             required: "Username is required",
                             pattern: {
-                              value: /^[A-Za-z]+$/i,
-                              message:
-                                "Please valid characters only. [Alphabets A to Z, a to z ]",
+                                value: /^[A-Za-z]+$/i,
+                                message: "Please valid characters only. [Alphabets A to Z, a to z]",
                             },
-                            minLength: { value: 5, message: "Enter atleast 5 characters" },
-                          })}
+                            minLength: { value: 5, message: "Enter at least 5 characters" },
+                        })}
                         className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-500"
                     />
                     {errors.username && <p className="text-red-600">{errors.username.message}</p>}
@@ -76,14 +110,14 @@ const SignUp = () => {
                         {...register("email", {
                             required: "Email is required",
                             pattern: {
-                              value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                              message: "Please enter a valid email id",
+                                value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                                message: "Please enter a valid email id",
                             },
                             minLength: {
-                              value: 11,
-                              message: "Enter atleast 11 characters",
+                                value: 11,
+                                message: "Enter at least 11 characters",
                             },
-                          })}
+                        })}
                         className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-500"
                     />
                     {errors.email && <p className="text-red-600">{errors.email.message}</p>}
@@ -94,14 +128,12 @@ const SignUp = () => {
                         {...register("phone", {
                             required: "Phone number is required",
                             pattern: {
-                              value: /^\d{10}$/,
-                              message: "Please enter a valid phone number",
+                                value: /^\d{10}$/,
+                                message: "Please enter a valid phone number",
                             },
                             minLength: { value: 10, message: "Enter 10 numbers" },
                             maxLength: { value: 10, message: "Enter 10 numbers" },
-                          })}
-                          minLength={10}
-                          maxLength={10}
+                        })}
                         className="border border-slate-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black-500"
                     />
                     {errors.phone && <p className="text-red-600">{errors.phone.message}</p>}
@@ -123,12 +155,14 @@ const SignUp = () => {
                     <button
                         type="submit"
                         className="bg-black text-white p-3 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
+                        disabled={loading}
                     >
                         {loading ? 'Loading....' : 'Sign up'}
                     </button>
                 </form>
                 {error && <p className="text-red-600 mt-4">{error}</p>}
             </div>
+            <ToastContainer />
         </div>
     );
 };

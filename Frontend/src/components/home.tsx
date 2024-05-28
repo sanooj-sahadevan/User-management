@@ -77,69 +77,63 @@ const Home = () => {
   }, [navigate]);
 
   return (
-    <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
-      <form className='flex flex-col gap-4'>
-        <img
-          src={userData?.image || "https://via.placeholder.com/150"}
-          alt="Profile"
-          className='h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2'
-        />
-        <input
-          type="file"
-          name="image"
-          onChange={imageHandler}
-          accept="image/*"
-          // src="userData?.image "
-          src={image ? URL.createObjectURL(image) : userData?.image ? `http://localhost:3000/user/images/${userData?.image}` : `http://localhost:3000/user/images/default.jpg`}
-
-        />
-
-        <button
-          type="submit"
-          className="p-2 bg-fuchsia-700 text-white font-bold my-2 rounded"
-        >
-          {loading ? "Loading............" : "Upload Image"}
-        </button>
-
-
-
-
-        <label htmlFor='username' className='sr-only'>Username</label>
-        <input
-          type="text"
-          id='username'
-          placeholder='Username'
-          value={userData?.username || ''}
-          className='bg-slate-100 rounded-lg p-2'
-          readOnly
-        />
-        <label htmlFor='email' className='sr-only'>Email</label>
-        <input
-          type="email"
-          id='email'
-          placeholder='Email'
-          value={userData?.email || ''}
-          className='bg-slate-100 rounded-lg p-2'
-          readOnly
-        />
-        <label htmlFor='phonenumber' className='sr-only'>Phone Number</label>
-        <input
-          type="number"
-          id='phonenumber'
-          placeholder='Phone Number'
-          value={userData?.phone || ''}
-          className='bg-slate-100 rounded-lg p-2'
-          readOnly
-        />
-        <button type='submit' className='bg-blue-500 text-white rounded-lg py-2'>Submit</button>
-      </form>
-      <div className='flex justify-between mt-5'>
-        <span className='text-red-700 cursor-pointer'>Delete Account</span>
-        <span onClick={handleLogout} className='text-red-700 cursor-pointer'>Log out</span>
-      </div>
-      <ToastContainer transition={Bounce} />
-    </div>
+    <div className='flex justify-center items-center min-h-screen bg-pink-100'>
+            <div className='p-6 max-w-lg bg-white rounded-lg shadow-md'>
+                <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
+                <form className='flex flex-col items-center gap-4'>
+                    <img
+                        src={userData?.image || "https://via.placeholder.com/150"}
+                        alt="Profile"
+                        className='h-24 w-24 cursor-pointer rounded-full object-cover'
+                    />
+                    <input
+                        type="file"
+                        name="image"
+                        onChange={imageHandler}
+                        accept="image/*"
+                        className="mt-2"
+                    />
+                    <button
+                        type="button"
+                        className="bg-slate-200 text-gray-700 font-semibold rounded-lg p-2 w-full mt-4 hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    >
+                        {loading ? "Loading............" : "Upload Image"}
+                    </button>
+                    <label htmlFor='username' className='sr-only'>Username</label>
+                    <input
+                        type="text"
+                        id='username'
+                        placeholder='Username'
+                        value={userData?.username || ''}
+                        className='bg-slate-200 rounded-lg p-2 w-full'
+                        readOnly
+                    />
+                    <label htmlFor='email' className='sr-only'>Email</label>
+                    <input
+                        type="email"
+                        id='email'
+                        placeholder='Email'
+                        value={userData?.email || ''}
+                        className='bg-slate-200 rounded-lg p-2 w-full'
+                        readOnly
+                    />
+                    <label htmlFor='phonenumber' className='sr-only'>Phone Number</label>
+                    <input
+                        type="number"
+                        id='phonenumber'
+                        placeholder='Phone Number'
+                        value={userData?.phone || ''}
+                        className='bg-slate-200 rounded-lg p-2 w-full'
+                        readOnly
+                    />
+                </form>
+                <div className='flex justify-between mt-5'>
+                    <span className='text-red-700 cursor-pointer'>Delete Account</span>
+                    <span onClick={handleLogout} className='text-red-700 cursor-pointer'>Log out</span>
+                </div>
+                <ToastContainer transition={Bounce} />
+            </div>
+        </div>
   );
 };
 

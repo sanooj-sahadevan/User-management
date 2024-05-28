@@ -121,10 +121,9 @@ function AdminTable() {
     }
 
     return (
-        <div className="flex flex-col items-center bg-black min-h-screen py-8">
-            <ToastContainer />
+        <div className="flex flex-col items-center bg-gray-900 min-h-screen py-8">
             <button
-                className="py-2 px-4 mb-6 bg-lime-500 text-white font-bold rounded-lg hover:bg-lime-400 transition duration-300"
+                className="py-2 px-6 mb-6 bg-lime-500 text-white font-bold rounded-lg hover:bg-lime-400 transition duration-300"
                 onClick={() => navigate("/admin/add")}
             >
                 Add User
@@ -159,8 +158,6 @@ function AdminTable() {
                                         >
                                             📝Edit
                                         </button>
-                                       
-                                        
                                         <button
                                             className="py-1 px-2 bg-red-600 rounded-md text-white hover:bg-red-500 transition duration-300"
                                             onClick={() => deleteHandler(user.id)}

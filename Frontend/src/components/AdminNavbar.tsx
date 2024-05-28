@@ -14,17 +14,17 @@ function AdminNavbar() {
   }
 
   return (
-    <nav className="bg-black h-24 flex items-center justify-between px-10">
-      <h1 className="text-white md:text-4xl font-bold">
-        Admin Dashboard
-      </h1>
-      <button
-        className="text-white font-bold py-2 px-4 bg-red-700 rounded-lg hover:bg-red-600 transition duration-300"
-        onClick={logoutHandler}
-      >
-        Logout
-      </button>
-    </nav>
+    <nav className="bg-gray-900 h-16 flex items-center justify-between px-10 shadow-md">
+            <h1 className="text-white md:text-2xl font-bold">
+                Admin Dashboard
+            </h1>
+            <button
+                className="text-white font-bold py-2 px-4 bg-red-600 rounded-lg hover:bg-red-500 transition duration-300"
+                onClick={logoutHandler}
+            >
+                Logout
+            </button>
+        </nav>
   );
 }
 

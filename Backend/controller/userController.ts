@@ -79,7 +79,7 @@ const loginPost = async (req: Request, res: Response, next: NextFunction) => {
 
 const verifyUser = async (req: Request, res: Response) => {
   try {
-    const { userJWT } = req.body;
+    const { userJWT } = req.body 
     const verifyJWT = JWT.verify(
       userJWT,
       String(process.env.JWT_KEY)
