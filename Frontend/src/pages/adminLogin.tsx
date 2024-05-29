@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import AdminLoginForm from '../components/adminLoginForm'
-import { verifyUserJWT } from '../Utils/verifyUserJWT';
+import { verifyAdminJWT } from '../Utils/verifyAdminJWT';
 
 function AdminLoginPage() {
 
-  const adminLogged = verifyUserJWT();
+  const adminLogged = verifyAdminJWT();
 
   return adminLogged ? <Navigate to="/admin/dashboard" /> : <AdminLoginForm />;
 }

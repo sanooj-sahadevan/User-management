@@ -19,34 +19,22 @@ type Row = {
 
 const adminLoginPost = async (req:any, res:any) => {
   try {
-    console.log('login admin');
     const { email, password } = req.body;
-    console.log(req.body);  // This should now log the request body correctly
 
-    const emailMatch = email === 'admin@gmail.com';
-    const passMatch = password === 'Admin@123';
-    console.log('check');
+    const emailMatch = email == process.env.ADMIN_EMAIL;
+    const passMatch = password == process.env.ADMIN_PASS;
 
-    const adminJWT = jwt.sign({ email }, String(process.env.JWT_KEY), {
+    if (emailMatch && passMatch) {
+      const adminJWT = jwt.sign({ email }, String(process.env.JWT_KEY), {
         expiresIn: "1h",
       });
+
       res.status(200).send({ success: true, adminJWT });
-
-
-
-    // if (emailMatch && passMatch) {
-
-    //   const adminJWT = jwt.sign({ email }, String(process.env.JWT_KEY), {
-    //     expiresIn: "1h",
-    //   });
-    //   console.log('match');
-
-    //   res.status(200).send({ success: true, adminJWT });
-    // } else {
-    //   console.log('mooji');
-
-    //   res.status(401).send({ success: false, message: "Invalid Credentials" });
-    // }
+    } else {
+      res
+        .status(401)
+        .send({ success: false, message: "Invalid Credentials" });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -71,32 +59,34 @@ const adminLoginPost = async (req:any, res:any) => {
   }
   const editUser = async (req: any, res: any) => {
     try {
-      console.log('1');
-      
-      const { id } = req.params;      
-      const { username, email, phone } = req.body;
-      console.log('Request params:', req.params);
-      console.log('Request body before update:', req.body);
-  
-      const query = `UPDATE users SET username= $1 , email = $2, phone = $3 WHERE id = $4`;
-      await client.query(query, [username, email, phone, id]);
-      console.log('Executed query:', query);
-      console.log('Updated values:', { username, email, phone });
-  
-      res.status(200).send({ success: true });
+        console.log('1');
+        
+        const { id } = req.params;      
+        const { username, email, phone } = req.body;
+        console.log('Request params:', req.params);
+        console.log('Request body before update:', req.body);
+    
+        // Check if username or email already exists
+        const checkQuery = 'SELECT * FROM users WHERE username = $1 OR email = $2';
+        const checkResult = await client.query(checkQuery, [username, email]);
+    
+        if (checkResult.rows.length > 0) {
+            return res.status(208).send({ success: false, message: 'Username or email already exists' });
+        }
+    
+        // Proceed with the update if username or email doesn't exist
+        const updateQuery = 'UPDATE users SET username = $1, email = $2, phone = $3 WHERE id = $4';
+        await client.query(updateQuery, [username, email, phone, id]);
+        console.log('Executed query:', updateQuery);
+        console.log('Updated values:', { username, email, phone });
+    
+        res.status(200).send({ success: true });
     } catch (error: any) {
-      console.log(error);
-      if (error.code === "23505") {
-        return res
-          .status(208)
-          .send({ success: false, message: "Credentials already exist" });
-      } else {
-        return res
-          .status(500)
-          .send({ success: false, message: "An error occurred" });
-      }
+        console.log(error);
+        return res.status(500).send({ success: false, message: 'An error occurred' });
     }
-  };
+};
+
   
 
 

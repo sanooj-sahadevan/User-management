@@ -9,7 +9,7 @@ function AdminNavbar() {
     const res = confirm('Are you sure you want to logout?');
     if (res) {
       localStorage.removeItem("adminJWT");
-      navigate("/");
+      navigate("/admin");
     }
   }
 

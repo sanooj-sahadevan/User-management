@@ -8,6 +8,7 @@ import AdminDashboard from './pages/adminDashboad'
 import AdminEdit from './pages/adminEdit'
 import AdminAddUser from './components/adminAdduser'
 import ProtectedUserRoute from './components/ProtectedUserRoute.';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute'
 
 
 
@@ -22,9 +23,9 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<ProtectedUserRoute><Home /></ProtectedUserRoute>} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/edit" element={<AdminEdit />} />
-        <Route path="/admin/add" element={<AdminAddUser />} />
+        <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
+        <Route path="/admin/edit" element={<ProtectedAdminRoute> <AdminEdit /></ProtectedAdminRoute>} />
+        <Route path="/admin/add" element={<ProtectedAdminRoute><AdminAddUser /></ProtectedAdminRoute>} />
 
       </Routes>
     </BrowserRouter>

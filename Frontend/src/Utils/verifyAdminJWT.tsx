@@ -7,7 +7,8 @@ import { loginAdmin, logoutAdmin } from "../Redux/Admin/adminSlice";
 export function verifyAdminJWT() {
   const dispatch = useDispatch();
   const adminJWT = localStorage.getItem("adminJWT");
-
+  console.log(adminJWT);
+  
   useEffect(() => {
     if (!adminJWT) {
       dispatch(logoutAdmin());
@@ -17,25 +18,28 @@ export function verifyAdminJWT() {
     async function verifyAdmin() {
       try {
         const response = await fetch(`http://localhost:3000/admin/verifyAdmin`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ adminJWT }),
         });
-        const result = await response.json();
-        if (result.success) {
+
+        const data = await response.json();
+
+        if (data.success) {
           dispatch(loginAdmin());
         } else {
           dispatch(logoutAdmin());
         }
       } catch (error) {
+        console.error("Verification failed", error);
         dispatch(logoutAdmin());
       }
     }
-    
+
     verifyAdmin();
-  }, [dispatch, adminJWT]);
+  }, [adminJWT, dispatch]);
 
   return useSelector((store: any) => store.admin.adminLogged);
 }
