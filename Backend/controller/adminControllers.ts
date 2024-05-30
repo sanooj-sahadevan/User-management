@@ -66,7 +66,6 @@ const adminLoginPost = async (req:any, res:any) => {
         console.log('Request params:', req.params);
         console.log('Request body before update:', req.body);
     
-        // Check if username or email already exists
         const checkQuery = 'SELECT * FROM users WHERE username = $1 OR email = $2';
         const checkResult = await client.query(checkQuery, [username, email]);
     
@@ -74,7 +73,6 @@ const adminLoginPost = async (req:any, res:any) => {
             return res.status(208).send({ success: false, message: 'Username or email already exists' });
         }
     
-        // Proceed with the update if username or email doesn't exist
         const updateQuery = 'UPDATE users SET username = $1, email = $2, phone = $3 WHERE id = $4';
         await client.query(updateQuery, [username, email, phone, id]);
         console.log('Executed query:', updateQuery);
@@ -113,6 +111,13 @@ console.log(req.params+'req');
   
       const { username, email, phone, password } = req.body;
       console.log('Request body:', req.body);
+
+      const checkQuery = 'SELECT * FROM users WHERE username = $1 OR email = $2';
+      const checkResult = await client.query(checkQuery, [username, email]);
+  
+      if (checkResult.rows.length > 0) {
+          return res.status(208).send({ success: false, message: 'Username or email already exists' });
+      }
   
       // Encrypt the password
       const encryptedPassword = bcrypt.hashSync(password, 10);

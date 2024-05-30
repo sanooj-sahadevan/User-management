@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';  // Ensure you import the styles for Toastify
 
 type DataType = {
